@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import ClearIcon from '@material-ui/icons/Clear';
 import { useToasts } from 'react-toast-notifications';
-import { Icon, Label, Menu, Table } from 'semantic-ui-react';
+import { Table } from 'semantic-ui-react';
 
 import api from '../../services/api';
 
