@@ -1,5 +1,5 @@
 import { useState, useEffect, FormEvent } from 'react';
-import { Form, Input, Segment, Button } from 'semantic-ui-react'
+import { Form, Segment, Button } from 'semantic-ui-react'
 import { useToasts } from 'react-toast-notifications';
 import InputMask from 'react-input-mask';
 import { useHistory } from 'react-router-dom';
@@ -70,24 +70,29 @@ function FormUser() {
       }
     })
   }, [cep]);
-  
 
   return (
     <Segment>
       <Form onSubmit={handleSubmit}>
-        <Input required
+        <Form.Input required
           fluid label='Nome'
           placeholder='Nome Completo'
           value={name}
           onChange={event => setName(event.target.value)}
         />
-        <Input required
-          fluid label='CPF'
-          placeholder='CPF'
+        <InputMask
+          mask='999.999.999-99'
           value={cpf}
           onChange={event => setCpf(event.target.value)}
-        />
-        <Input required
+        >
+          {(inputProps: InputMaskData) => 
+            <Form.Input {...inputProps}
+            required
+            fluid label='CPF'
+            placeholder='CPF'
+            />}
+        </InputMask>
+        <Form.Input required
           type="email"
           fluid label='E-mail'
           placeholder='E-mail'
@@ -96,21 +101,25 @@ function FormUser() {
         />
         <InputMask 
           mask="99999-999" 
-          required
           value={cep} 
           onChange={event => setCep(event.target.value)}
           >
-          {(inputProps: InputMaskData) => <Input {...inputProps} required fluid label='CEP' placeholder='CEP' />}
+          {(inputProps: InputMaskData) => 
+            <Form.Input {...inputProps} 
+              required 
+              fluid label='CEP' 
+              placeholder='CEP' 
+        />}
         </InputMask>
         <Form.Group>
-          <Input 
+          <Form.Input 
             label='Endereço' 
             placeholder='Endereço'
             value={street}
             onChange={event => setStreet(event.target.value)}
             width={12}
           />
-          <Input
+          <Form.Input
             required
             label='Número'
             placeholder='Número'
@@ -121,13 +130,13 @@ function FormUser() {
           />
         </Form.Group>
         <Form.Group widths={2}>
-          <Input
+          <Form.Input
             label='Bairro' 
             placeholder='Bairro'
             value={district}
             onChange={event => setDistrict(event.target.value)}
           />
-          <Input
+          <Form.Input
             label='Cidade'
             placeholder='Cidade'
             value={city}

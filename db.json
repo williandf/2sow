@@ -5,39 +5,13 @@
       "cpf": "225.724.348-06",
       "email": "williankeyex@gmail.com",
       "address": {
-        "cep": "09060-050",
-        "street": "Rua Xingu",
-        "number": "365",
-        "district": "Vila Valparaíso",
-        "city": "Santo André"
+        "cep": "09614-000",
+        "street": "Avenida Winston Churchill",
+        "number": "1235",
+        "district": "Rudge Ramos",
+        "city": "São Bernardo do Campo"
       },
       "id": 1
-    },
-    {
-      "name": "Willian Del Freu",
-      "cpf": "22572434806",
-      "email": "williankeyex@gmail.com",
-      "address": {
-        "cep": "09060050",
-        "street": "Rua Xingu",
-        "number": "365",
-        "district": "Vila Valparaíso",
-        "city": "Santo André"
-      },
-      "id": 2
-    },
-    {
-      "name": "Willian Del Freu",
-      "cpf": "22572434806",
-      "email": "willian@keyex.com.br",
-      "address": {
-        "cep": "09060-050",
-        "street": "Rua Xingu",
-        "number": "365",
-        "district": "Vila Valparaíso",
-        "city": "Santo André"
-      },
-      "id": 3
     }
   ]
 }

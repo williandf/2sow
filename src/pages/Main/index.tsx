@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Modal } from 'semantic-ui-react'
 import EditIcon from '@material-ui/icons/Edit';
 import ClearIcon from '@material-ui/icons/Clear';
-
-import FormUser from '../../components/Form';
-
+import { useToasts } from 'react-toast-notifications';
+import { Icon, Label, Menu, Table } from 'semantic-ui-react';
 
 import api from '../../services/api';
 
@@ -30,6 +28,7 @@ interface Props {
 
 function Main({ data, getData }: Props) {
   const [showData, setShowData] = useState<Data[]>([]);
+  const { addToast } = useToasts();
   const history = useHistory();
 
   useEffect(() => {
@@ -44,11 +43,11 @@ function Main({ data, getData }: Props) {
     try {
       await api.delete(`usuarios/${id}`).then(response => {
         if (response.status === 200) {
-          alert('Dados excluidos com sucesso');
+          addToast('Usuário Excluido Com Sucesso', { appearance: 'success' });
         }
       });
     } catch (err) {
-      alert('Erro ao deletar dados, tente novamente.');
+      addToast('Erro ao deletar usuário', { appearance: 'error' });
     }
   }
 
@@ -57,37 +56,33 @@ function Main({ data, getData }: Props) {
   }
   
   return (
-    <main>
+    <>
+    <Table celled>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell>Nome</Table.HeaderCell>
+          <Table.HeaderCell>CPF</Table.HeaderCell>
+          <Table.HeaderCell>E-mail</Table.HeaderCell>
+          <Table.HeaderCell>Cidade</Table.HeaderCell>
+          <Table.HeaderCell textAlign='center'>Editar</Table.HeaderCell>
+          <Table.HeaderCell textAlign='center'>Deletar</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
       {showData.map((showData) => {
         return (
-          <div key={showData.id}>
-            <div>
-              <EditIcon className="editIcon" onClick={() => handleEditData(showData.id)} type="button"/>
-              <ClearIcon className="clearIcon" onClick={() => handleDeleteData(showData.id)} type='button'/>
-            </div>
-            <div>
-              <p>Dados</p>
-            </div>
-            <div>
-              <p>{[showData.name]}</p>
-            </div>
-            <div>
-              <p>{[showData.cpf]}</p>
-            </div>
-            <div>
-              <p>{[showData.email]}</p>
-            </div>
-            <div>
-              <p>Endereço</p>
-              <p>{[showData.address.cep]}</p>
-              <p>{[showData.address.street]}</p>
-              <p>{[showData.address.number]}</p>
-              <p>{[showData.address.district]}</p>
-              <p>{[showData.address.city]}</p>
-            </div>
-            </div>
-        )})}
-    </main>
+      <Table.Body>
+        <Table.Row>
+          <Table.Cell>{[showData.name]}</Table.Cell>
+          <Table.Cell>{[showData.cpf]}</Table.Cell>
+          <Table.Cell>{[showData.email]}</Table.Cell>
+          <Table.Cell>{[showData.address.city]}</Table.Cell>
+          <Table.Cell textAlign='center'>{<EditIcon className="editIcon" onClick={() => handleEditData(showData.id)} type="button"/>}</Table.Cell>
+          <Table.Cell textAlign='center'>{<ClearIcon className="clearIcon" onClick={() => handleDeleteData(showData.id)} type='button'/>}</Table.Cell>
+        </Table.Row>
+      </Table.Body>
+      )})}
+    </Table>
+    </>
   )
 }
 

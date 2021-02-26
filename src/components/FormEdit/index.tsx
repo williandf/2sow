@@ -1,11 +1,21 @@
 import { FormEvent, useEffect, useState } from 'react';
+import { Form, Segment, Button } from 'semantic-ui-react'
 import InputMask from 'react-input-mask';
 import { useHistory, useParams } from 'react-router-dom';
+import { useToasts } from 'react-toast-notifications';
 
 import api from '../../services/api';
+import viaCep from '../../services/viaCep';
+
 
 interface RouteParams {
   id: string;
+}
+
+interface InputMaskData {
+  mask: number;
+  value: number; 
+  onChange: () => void;
 }
 
 function FormEdit() {
@@ -19,6 +29,7 @@ function FormEdit() {
   const [number, setNumber] = useState('');
   const [district, setDistrict] = useState('');
   const [city, setCity] = useState('');
+  const { addToast } = useToasts();
 
 
   useEffect(() => {
@@ -26,13 +37,24 @@ function FormEdit() {
       setName(response.data.name);
       setEmail(response.data.email);
       setCpf(response.data.cpf);
-      setCep(response.data.cep);
-      setStreet(response.data.street);
-      setNumber(response.data.number);
-      setDistrict(response.data.district);
-      setCity(response.data.city);
+      setCep(response.data.address.cep);
+      setStreet(response.data.address.street);
+      setNumber(response.data.address.number);
+      setDistrict(response.data.address.district);
+      setCity(response.data.address.city);
     })
   }, [id]);
+
+  useEffect(() => {
+    viaCep.get(`${cep}/json`).then(response => {
+      if (response.status === 200) {
+      setStreet(response.data.logradouro);
+      setDistrict(response.data.bairro);
+      setCity(response.data.localidade);
+      //numberInput.current?.focus();
+      }
+    })
+  }, [cep]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -50,81 +72,90 @@ function FormEdit() {
       }
     }
       await api.patch(`usuarios/${id}`, data).then(response => {
-        if (response.status === 204) {
-        alert('Atualizado Com Sucesso');
+        if (response.status === 200) {
+        addToast('Atualizado com Sucesso', { appearance: 'success' });
         history.push('/');
         }
       }).catch(error => {
-        alert(`${error.response.data.message}`);
+        addToast(error.message, { appearance: 'error' });
       });
     }
 
   return (
-    <section>
-      <form onSubmit={handleSubmit}>
-      <div>
-          <label>Nome:</label>
-          <input 
-            type="text" 
-            value={name} 
-            placeholder="Nome"
-            onChange={event => setName(event.target.value)}
-          />
-        </div>
-        <div>
-          <label>CPF:</label>
-          <InputMask 
-            mask="999.999.999-99" 
-            value={cpf}
-            onChange={event => setCpf(event.target.value)}
-            placeholder="CPF"
-          />
-        </div>
-        <div>
-          <label>E-mail:</label>
-          <input 
-            type="email" 
-            value={email}
-            onChange={event => setEmail(event.target.value)}
-            placeholder="E-mail"
-          />
-        </div>
-        <div>
-          <label>Endereço</label>
-          <InputMask 
-            mask="99999-999" 
-            value={cep} 
-            onChange={event => setCep(event.target.value)}
-            placeholder="CEP" 
-          />
-          <input 
-            type="text" 
+    <Segment>
+      <Form onSubmit={handleSubmit}>
+        <Form.Input required
+          fluid label='Nome'
+          placeholder='Nome Completo'
+          value={name}
+          onChange={event => setName(event.target.value)}
+        />
+        <InputMask
+          mask='999.999.999-99'
+          value={cpf}
+          onChange={event => setCpf(event.target.value)}
+        >
+          {(inputProps: InputMaskData) => 
+            <Form.Input {...inputProps}
+            required
+            fluid label='CPF'
+            placeholder='CPF'
+            />}
+        </InputMask>
+        <Form.Input required
+          type="email"
+          fluid label='E-mail'
+          placeholder='E-mail'
+          value={email}
+          onChange={event => setEmail(event.target.value)}
+        />
+        <InputMask 
+          mask="99999-999" 
+          value={cep} 
+          onChange={event => setCep(event.target.value)}
+          >
+          {(inputProps: InputMaskData) => 
+            <Form.Input {...inputProps} 
+              required 
+              fluid label='CEP' 
+              placeholder='CEP' 
+        />}
+        </InputMask>
+        <Form.Group>
+          <Form.Input 
+            label='Endereço' 
+            placeholder='Endereço'
             value={street}
             onChange={event => setStreet(event.target.value)}
-            placeholder="Endereço"
+            width={12}
           />
-          <input 
-            type="number" 
+          <Form.Input
+            required
+            label='Número'
+            placeholder='Número'
             value={number}
+            // ref={numberInput}
             onChange={event => setNumber(event.target.value)}
-            placeholder="Número"
+            width={4}
           />
-          <input 
-            type="text" 
+        </Form.Group>
+        <Form.Group widths={2}>
+          <Form.Input
+            label='Bairro' 
+            placeholder='Bairro'
             value={district}
             onChange={event => setDistrict(event.target.value)}
-            placeholder="Bairro"
           />
-          <input 
-            type="text"
+          <Form.Input
+            label='Cidade'
+            placeholder='Cidade'
             value={city}
             onChange={event => setCity(event.target.value)}
-            placeholder="Cidade"
           />
-        </div>
-        <button>Salvar</button>
-      </form>
-    </section>
+        </Form.Group>
+        <Button>Salvar</Button>
+      </Form>
+    </Segment>
   );
 };
 
