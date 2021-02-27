@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import EditIcon from '@material-ui/icons/Edit';
 import ClearIcon from '@material-ui/icons/Clear';
 import { useToasts } from 'react-toast-notifications';
-import { Table, Input } from 'semantic-ui-react';
+import { Table, Input, Menu, Icon, Segment } from 'semantic-ui-react';
 
 import Header from '../../components/Header';
 
@@ -58,16 +58,14 @@ function Home() {
   return (
     <>
     <Header />
-    <Table celled>
-      <Table.Header>
+    <Segment basic textAlign='right'>
         <Input 
           icon='search' 
           placeholder='Search...'
           value={searchTerm}
           onChange={handleChange}
         />
-      </Table.Header>
-    </Table>
+    </Segment>
     <Table celled>
       <Table.Header>
         <Table.Row>
@@ -92,6 +90,24 @@ function Home() {
         </Table.Row>
       </Table.Body>
       )})}
+      <Table.Footer>
+        <Table.Row>
+          <Table.HeaderCell colSpan='6'>
+            <Menu floated='right' pagination>
+              <Menu.Item as='a' icon>
+                <Icon name='chevron left' />
+              </Menu.Item>
+              <Menu.Item as='a'>1</Menu.Item>
+              <Menu.Item as='a'>2</Menu.Item>
+              <Menu.Item as='a'>3</Menu.Item>
+              <Menu.Item as='a'>4</Menu.Item>
+              <Menu.Item as='a' icon>
+                <Icon name='chevron right' />
+              </Menu.Item>
+            </Menu>
+          </Table.HeaderCell>
+        </Table.Row>
+      </Table.Footer>
     </Table>
     </>
   )
