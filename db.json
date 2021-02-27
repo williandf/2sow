@@ -12,6 +12,19 @@
         "city": "Santo André"
       },
       "id": 1
+    },
+    {
+      "name": "Cibele Aparecida de Oliveira",
+      "cpf": "332.923.828-31",
+      "email": "c.a.oliveira@terra.com.br",
+      "address": {
+        "cep": "09060-050",
+        "street": "Rua Xingu",
+        "number": "365",
+        "district": "Vila Valparaíso",
+        "city": "Santo André"
+      },
+      "id": 2
     }
   ]
 }
