@@ -8,7 +8,6 @@ const Login: React.FC = () => {
   const { signIn } = useAuth();
   const { addToast } = useToasts();
 
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -40,7 +39,6 @@ const Login: React.FC = () => {
             <Form.Input
               fluid
               icon='lock'
-              iconPositon='left'
               placeholder='Password'
               type='password'
               onChange={event => setPassword(event.target.value)}
