@@ -53,7 +53,7 @@ function FormUser() {
       setNumber('');
       setDistrict('');
       setCity('');
-      history.push('/usuarios');
+      history.push('/');
     }
   }).catch(error => {
     addToast(error.message, { appearance: 'error' });

@@ -1,8 +1,10 @@
-import { Menu } from 'semantic-ui-react'
-import { useHistory } from 'react-router-dom'
+import { Menu } from 'semantic-ui-react';
+import { useHistory } from 'react-router-dom';
+import { useAuth} from '../../contexts/auth';
 
-function Header() {
+const Header: React.FC = () => {
   const history = useHistory();
+  const { signIn } = useAuth();
 
   function goToHome() {
   history.push('/');
@@ -10,6 +12,10 @@ function Header() {
 
   function goToAddUser() {
     history.push('/add');
+    }
+  
+    function logOut() {
+      signIn(null);
     }
 
   return (
@@ -26,6 +32,7 @@ function Header() {
       </Menu.Item>
       <Menu.Menu position='right'>
         <Menu.Item
+          onClick={logOut}
         >
           Log Out
         </Menu.Item>

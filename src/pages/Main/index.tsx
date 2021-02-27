@@ -70,7 +70,7 @@ function Main({ data, getData }: Props) {
       </Table.Header>
       {showData.map((showData) => {
         return (
-      <Table.Body>
+      <Table.Body key={showData.id}>
         <Table.Row>
           <Table.Cell>{[showData.name]}</Table.Cell>
           <Table.Cell>{[showData.cpf]}</Table.Cell>
