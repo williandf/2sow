@@ -13,10 +13,12 @@ const Login: React.FC = () => {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    if (email === '' || password === '') {
-      addToast('Preencha os campos do Login', { appearance: 'error' });
-    } else {
-      signIn({ login: email });
+    if (email === '') {
+      addToast('Preencha o e-mail corretamente', { appearance: 'error' });
+      } if  (password.length <= 3) {
+        addToast('Password deve conter no minimo 4 caracteres', { appearance: 'error' });
+        }else {
+          signIn({ login: email });
     }
   }
 

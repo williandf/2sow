@@ -1,4 +1,4 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, FormEvent, useRef } from 'react';
 import { Form, Segment, Button } from 'semantic-ui-react'
 import { useToasts } from 'react-toast-notifications';
 import InputMask from 'react-input-mask';
@@ -9,15 +9,15 @@ import viaCep from '../../services/viaCep';
 
 function FormUser() {
   const history = useHistory();
-  //const numberInput = createRef<HTMLInputElement | null>();
-  const [name, setName] = useState('');
+  const numberInput = useRef<HTMLInputElement>(null);
+  const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
   const [cep, setCep] = useState('');
-  const [street, setStreet] = useState('');
-  const [number, setNumber] = useState('');
-  const [district, setDistrict] = useState('');
-  const [city, setCity] = useState('');
+  const [rua, setRua] = useState('');
+  const [numero, setNumero] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [cidade, setCidade] = useState('');
   const { addToast } = useToasts();
 
   interface InputMaskData {
@@ -30,29 +30,29 @@ function FormUser() {
     event.preventDefault();
 
     const data = {
-      name,
+      nome,
       cpf,
       email,
-      address: {
+      endereco: {
         cep,
-        street,
-        number,
-        district,
-        city,
+        rua,
+        numero,
+        bairro,
+        cidade,
       }
     }
     
   await api.post('usuarios', data).then(response => {
     if (response.status === 201) {
       addToast('Saved Successfully', { appearance: 'success' });
-      setName('');
+      setNome('');
       setEmail('');
       setCpf('');
       setCep('');
-      setStreet('');
-      setNumber('');
-      setDistrict('');
-      setCity('');
+      setRua('');
+      setNumero('');
+      setBairro('');
+      setCidade('');
       history.push('/');
     }
   }).catch(error => {
@@ -61,14 +61,18 @@ function FormUser() {
   }
 
   useEffect(() => {
-    viaCep.get(`${cep}/json`).then(response => {
-      if (response.status === 200) {
-      setStreet(response.data.logradouro);
-      setDistrict(response.data.bairro);
-      setCity(response.data.localidade);
-      //numberInput.current?.focus();
-      }
-    })
+    const regex = /[0-9]{5}-[0-9]{3}/
+    const isValidCep = regex.test(cep)
+    if(isValidCep){
+      viaCep.get(`${cep}/json`).then(response => {
+        if (response.status === 200) {
+        setRua(response.data.logradouro);
+        setBairro(response.data.bairro);
+        setCidade(response.data.localidade);
+        numberInput.current?.focus();
+        }
+      })
+    }
   }, [cep]);
 
   return (
@@ -77,8 +81,8 @@ function FormUser() {
         <Form.Input required
           fluid label='Nome'
           placeholder='Nome Completo'
-          value={name}
-          onChange={event => setName(event.target.value)}
+          value={nome}
+          onChange={event => setNome(event.target.value)}
         />
         <InputMask
           mask='999.999.999-99'
@@ -115,38 +119,42 @@ function FormUser() {
           <Form.Input 
             label='Endereço' 
             placeholder='Endereço'
-            value={street}
-            onChange={event => setStreet(event.target.value)}
+            value={rua}
+            onChange={event => setRua(event.target.value)}
             width={12}
           />
-          <Form.Input
-            required
-            label='Número'
-            placeholder='Número'
-            value={number}
-            // ref={numberInput}
-            onChange={event => setNumber(event.target.value)}
-            width={4}
-          />
+          <div className="required four wide field">
+            <label>Número</label>
+            <div className="ui input">
+              <input 
+                required 
+                type="text"
+                value={numero}
+                ref={numberInput}
+                placeholder='Número'
+                onChange={event => setNumero(event.target.value)}
+                width={4}
+              />
+            </div>
+          </div>
         </Form.Group>
         <Form.Group widths={2}>
           <Form.Input
             label='Bairro' 
             placeholder='Bairro'
-            value={district}
-            onChange={event => setDistrict(event.target.value)}
+            value={bairro}
+            onChange={event => setBairro(event.target.value)}
           />
           <Form.Input
             label='Cidade'
             placeholder='Cidade'
-            value={city}
-            onChange={event => setCity(event.target.value)}
+            value={cidade}
+            onChange={event => setCidade(event.target.value)}
           />
         </Form.Group>
         <Button>Salvar</Button>
       </Form>
     </Segment>
-    
   );
 }
 

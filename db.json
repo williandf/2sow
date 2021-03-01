@@ -1,30 +1,17 @@
 {
   "usuarios": [
     {
-      "name": "Willian Del Freu",
+      "nome": "Willian Del Freu",
       "cpf": "225.724.348-06",
       "email": "williankeyex@gmail.com",
-      "address": {
+      "endereco": {
         "cep": "09060-050",
-        "street": "Rua Xingu",
-        "number": "365",
-        "district": "Vila Valparaíso",
-        "city": "Santo André"
+        "rua": "Rua Xingu",
+        "numero": "365",
+        "bairro": "Vila Valparaíso",
+        "cidade": "Santo André"
       },
       "id": 1
-    },
-    {
-      "name": "Cibele Aparecida de Oliveira",
-      "cpf": "332.923.828-31",
-      "email": "c.a.oliveira@terra.com.br",
-      "address": {
-        "cep": "09060-050",
-        "street": "Rua Xingu",
-        "number": "365",
-        "district": "Vila Valparaíso",
-        "city": "Santo André"
-      },
-      "id": 2
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState, useRef } from 'react';
 import { Form, Segment, Button } from 'semantic-ui-react'
 import InputMask from 'react-input-mask';
 import { useHistory, useParams } from 'react-router-dom';
@@ -7,68 +7,72 @@ import { useToasts } from 'react-toast-notifications';
 import api from '../../services/api';
 import viaCep from '../../services/viaCep';
 
-
 interface RouteParams {
   id: string;
 }
 
 interface InputMaskData {
   mask: number;
-  value: number; 
+  value: string; 
   onChange: () => void;
 }
 
 function FormEdit() {
   const history = useHistory();
   const { id } = useParams<RouteParams>();
-  const [name, setName] = useState('');
+  const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
   const [cep, setCep] = useState('');
-  const [street, setStreet] = useState('');
-  const [number, setNumber] = useState('');
-  const [district, setDistrict] = useState('');
-  const [city, setCity] = useState('');
+  const [rua, setRua] = useState('');
+  const [numero, setNumero] = useState('');
+  const [bairro, setBairro] = useState('');
+  const [cidade, setCidade] = useState('');
   const { addToast } = useToasts();
+  const numberInput = useRef<HTMLInputElement>(null);
 
 
   useEffect(() => {
     api.get(`/usuarios/${id}`).then(response => {
-      setName(response.data.name);
+      setNome(response.data.nome);
       setEmail(response.data.email);
       setCpf(response.data.cpf);
-      setCep(response.data.address.cep);
-      setStreet(response.data.address.street);
-      setNumber(response.data.address.number);
-      setDistrict(response.data.address.district);
-      setCity(response.data.address.city);
+      setCep(response.data.endereco.cep);
+      setRua(response.data.endereco.rua);
+      setNumero(response.data.endereco.numero);
+      setBairro(response.data.endereco.bairro);
+      setCidade(response.data.endereco.cidade);
     })
   }, [id]);
 
   useEffect(() => {
-    viaCep.get(`${cep}/json`).then(response => {
-      if (response.status === 200) {
-      setStreet(response.data.logradouro);
-      setDistrict(response.data.bairro);
-      setCity(response.data.localidade);
-      //numberInput.current?.focus();
-      }
-    })
+    const regex = /[0-9]{5}-[0-9]{3}/
+    const isValidCep = regex.test(cep)
+    if(isValidCep){
+      viaCep.get(`${cep}/json`).then(response => {
+        if (response.status === 200) {
+        setRua(response.data.logradouro);
+        setBairro(response.data.bairro);
+        setCidade(response.data.localidade)
+        numberInput.current?.focus();
+        }
+      })
+    }
   }, [cep]);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
     const data = {
-      name,
+      nome,
       cpf,
       email,
-      address: {
+      endereco: {
         cep,
-        street,
-        number,
-        district,
-        city,
+        rua,
+        numero,
+        bairro,
+        cidade,
       }
     }
       await api.patch(`usuarios/${id}`, data).then(response => {
@@ -87,8 +91,8 @@ function FormEdit() {
         <Form.Input required
           fluid label='Nome'
           placeholder='Nome Completo'
-          value={name}
-          onChange={event => setName(event.target.value)}
+          value={nome}
+          onChange={event => setNome(event.target.value)}
         />
         <InputMask
           mask='999.999.999-99'
@@ -122,35 +126,43 @@ function FormEdit() {
         />}
         </InputMask>
         <Form.Group>
-          <Form.Input 
-            label='Endereço' 
-            placeholder='Endereço'
-            value={street}
-            onChange={event => setStreet(event.target.value)}
-            width={12}
-          />
           <Form.Input
             required
-            label='Número'
-            placeholder='Número'
-            value={number}
-            // ref={numberInput}
-            onChange={event => setNumber(event.target.value)}
-            width={4}
+            label='Endereço' 
+            placeholder='Endereço'
+            value={rua}
+            onChange={event => setRua(event.target.value)}
+            width={12}
           />
+          <div className="required four wide field">
+            <label>Número</label>
+            <div className="ui input">
+              <input 
+                required 
+                value={numero}
+                type="text"
+                ref={numberInput}
+                placeholder='Número'
+                onChange={event => setNumero(event.target.value)}
+                width={4}
+              />
+            </div>
+          </div>
         </Form.Group>
         <Form.Group widths={2}>
           <Form.Input
+            required
             label='Bairro' 
             placeholder='Bairro'
-            value={district}
-            onChange={event => setDistrict(event.target.value)}
+            value={bairro}
+            onChange={event => setBairro(event.target.value)}
           />
           <Form.Input
+            required
             label='Cidade'
             placeholder='Cidade'
-            value={city}
-            onChange={event => setCity(event.target.value)}
+            value={cidade}
+            onChange={event => setCidade(event.target.value)}
           />
         </Form.Group>
         <Button>Salvar</Button>
