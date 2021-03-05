@@ -159,21 +159,16 @@ function FormEdit() {
             onChange={handleChange('endereco')}
             width={12}
           />
-          <div className="required four wide field">
-            <label>Número</label>
-            <div className="ui input">
-              <input 
-                name='numero'
-                required 
-                value={user.endereco.numero}
-                type="text"
-                ref={numberInput}
-                placeholder='Número'
-                onChange={handleChange('endereco')}
-                width={4}
-              />
-            </div>
-          </div>
+          <Form.Input
+            name='numero'
+            required
+            label='Número' 
+            placeholder='Número'
+            value={user.endereco.numero}
+            onChange={handleChange('endereco')}
+            width={12}
+            input={{ ref: numberInput }}
+          />
         </Form.Group>
         <Form.Group widths={2}>
           <Form.Input

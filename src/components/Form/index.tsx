@@ -146,21 +146,16 @@ function FormUser() {
             onChange={handleChange('endereco')}
             width={12}
           />
-          <div className="required four wide field">
-            <label>Número</label>
-            <div className="ui input">
-              <input 
-                name='numero'
-                required 
-                type="text"
-                value={user.endereco.numero}
-                ref={numberInput}
-                placeholder='Número'
-                onChange={handleChange('endereco')}
-                width={4}
-              />
-            </div>
-          </div>
+          <Form.Input 
+            name='numero'
+            required
+            label='Numero' 
+            placeholder='Numero'
+            value={user.endereco.numero}
+            onChange={handleChange('endereco')}
+            width={12}
+            input={{ ref: numberInput }}
+          />
         </Form.Group>
         <Form.Group widths={2}>
           <Form.Input
