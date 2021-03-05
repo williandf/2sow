@@ -12,6 +12,19 @@
         "cidade": "Santo André"
       },
       "id": 1
+    },
+    {
+      "nome": "Marcos Antonio Del Freu",
+      "cpf": "011.319.818-39",
+      "email": "marcos@keyex.com.br",
+      "endereco": {
+        "cep": "09812-480",
+        "rua": "Rua Tereza Breda Marson",
+        "numero": "70",
+        "bairro": "Assunção",
+        "cidade": "São Bernardo do Campo"
+      },
+      "id": 2
     }
   ]
 }
